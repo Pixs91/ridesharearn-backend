@@ -13,4 +13,8 @@
   "devDependencies": {
     "typescript": "^5.0.0"
   }
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js"
+}
 }
