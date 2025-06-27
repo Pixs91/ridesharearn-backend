@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "target": "ES2020",
+    "module": "ES2020",         // ? allows import.meta
+    "moduleResolution": "node",
     "outDir": "dist",
     "rootDir": ".",
+    "esModuleInterop": true,
     "strict": true,
-    "esModuleInterop": true
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
-  "include": ["index.ts"]
+  "include": ["index.ts", "vite.ts", "routes.ts", "storage.ts"],
+  "exclude": ["../client", "../vite.config.ts", "dist"]
 }
