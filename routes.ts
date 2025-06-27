@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { updateWeeklyEarningsSchema } from "@shared/schema";
+import { storage } from "./storage.js"; // ? add .js
+import { updateWeeklyEarningsSchema } from "../shared/schema.js"; // ? resolve @shared alias manually or ensure it builds correctly
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -10,7 +10,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const currentWeek = await storage.getCurrentWeekEarnings();
       if (!currentWeek) {
-        // Return empty structure for new week
         res.json({
           boltTotalEarnings: 0,
           uberTotalEarnings: 0,
@@ -59,27 +58,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/earnings/week-info", async (req, res) => {
     try {
       const now = new Date();
-      // Convert to GMT+2 (Romania timezone)
-      const romaniaTime = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+      const romaniaTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
       const dayOfWeek = romaniaTime.getDay();
       const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-      
+
       const currentWeekStart = new Date(romaniaTime);
       currentWeekStart.setDate(romaniaTime.getDate() + mondayOffset);
       currentWeekStart.setHours(0, 0, 0, 0);
-      
+
       const currentWeekEnd = new Date(currentWeekStart);
       currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
-      
+
       const previousWeekStart = new Date(currentWeekStart);
       previousWeekStart.setDate(currentWeekStart.getDate() - 7);
-      
+
       const previousWeekEnd = new Date(previousWeekStart);
       previousWeekEnd.setDate(previousWeekStart.getDate() + 6);
-      
+
       const nextResetDate = new Date(currentWeekStart);
       nextResetDate.setDate(currentWeekStart.getDate() + 7);
-      
+
       res.json({
         currentWeek: {
           start: currentWeekStart.toISOString(),
